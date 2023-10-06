@@ -1,10 +1,10 @@
-import { useState } from 'react';
 import { Provider } from 'react-redux';
 import { store } from './store/store';
 import GuestList from './components/GuestList';
+import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 
 function App() {
-  const [count, setCount] = useState(0);
+  const handleDragEnd = (result: DropResult) => {};
 
   return (
     <>
@@ -15,9 +15,11 @@ function App() {
           </header>
           {/* Container */}
           <div className="mt-4 grid grid-cols-3 gap-4">
-            <GuestList name="Brit Brit" />
-            <GuestList />
-            <GuestList name="Nathan" />
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <GuestList name="Brit Brit" />
+              <GuestList />
+              <GuestList name="Nathan" />
+            </DragDropContext>
           </div>
         </div>
       </Provider>
