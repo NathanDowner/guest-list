@@ -7,9 +7,21 @@ export interface GuestListState {
   otherLists: Record<string, Guest[]>;
 }
 
+// interface AlternativeState {
+//   contributors: string[];
+//   guestLists: Record<string, Guest[]>;
+// }
+
 interface AddToListPayload {
   listName: string;
   guest: Guest;
+}
+
+interface MoveWithinListPayload {
+  listName: string;
+  guestId: string;
+  srcIndex: number;
+  destIndex: number;
 }
 
 const initialState: GuestListState = {
@@ -30,10 +42,21 @@ export const guestListSlice = createSlice({
         state.otherLists[listName] = [guest];
       }
     },
+
+    reorderList: (state, action: PayloadAction<MoveWithinListPayload>) => {
+      const { listName, guestId, srcIndex, destIndex } = action.payload;
+      const list = state.otherLists[listName];
+
+      const guest = list.find((guest) => guest.id === guestId);
+      if (guest) {
+        list.splice(srcIndex, 1);
+        list.splice(destIndex, 0, guest);
+      }
+    },
   },
 });
 
-export const { addGuest } = guestListSlice.actions;
+export const { addGuest, reorderList } = guestListSlice.actions;
 
 // Selectors
 export const selectFinalList = (state: RootState) =>
