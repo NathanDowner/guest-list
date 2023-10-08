@@ -1,9 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import guestList from './guestListSlice';
+import contributors from './contributorSlice';
 
 export const store = configureStore({
   reducer: {
     guestList,
+    contributors,
   },
 });
 

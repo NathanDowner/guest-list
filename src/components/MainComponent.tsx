@@ -1,11 +1,18 @@
-import React from 'react';
 import GuestList from '../components/GuestList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { moveAcrossList, reorderList } from '../store/guestListSlice';
 import { FINAL_LIST_NAME } from '../utils/constants';
+import { selectContributors } from '../store/contributorSlice';
+import { Contributor } from '../models/contributor.interface';
+
+const NOT_A_CONTRIBUTOR: Contributor = {
+  id: 'not-a-contributor',
+  name: FINAL_LIST_NAME,
+};
 
 const MainComponent = () => {
+  const contributors = useAppSelector(selectContributors);
   const dispatch = useAppDispatch();
   const handleDragEnd = (result: DropResult) => {
     const { destination, source, draggableId } = result;
@@ -41,18 +48,12 @@ const MainComponent = () => {
     }
   };
   return (
-    <div className="p-4">
-      <header>
-        <h1 className="text-4xl text-center">Guest list</h1>
-      </header>
-      {/* Container */}
-      <div className="mt-4 grid grid-cols-3 gap-4">
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <GuestList name="Brit Brit" />
-          <GuestList name={FINAL_LIST_NAME} />
-          <GuestList name="Nathan" />
-        </DragDropContext>
-      </div>
+    <div className="mt-4 grid grid-cols-3 gap-4">
+      <DragDropContext onDragEnd={handleDragEnd}>
+        <GuestList contributor={contributors[0]} />
+        <GuestList contributor={NOT_A_CONTRIBUTOR} />
+        <GuestList contributor={contributors[1]} />
+      </DragDropContext>
     </div>
   );
 };

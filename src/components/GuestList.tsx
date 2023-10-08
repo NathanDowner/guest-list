@@ -6,12 +6,13 @@ import { createUUID } from '../utils';
 import { Droppable } from 'react-beautiful-dnd';
 import GuestCard from './GuestCard';
 import { FINAL_LIST_NAME } from '../utils/constants';
+import { Contributor } from '../models/contributor.interface';
 
 interface GuestListProps {
-  name: string;
+  contributor: Contributor;
 }
 
-const GuestList = ({ name }: GuestListProps) => {
+const GuestList = ({ contributor: { name, id } }: GuestListProps) => {
   const [newName, setNewName] = useState('');
 
   const dispatch = useAppDispatch();
@@ -32,39 +33,35 @@ const GuestList = ({ name }: GuestListProps) => {
       <header>
         <h2 className="">{canAddGuest ? `${name}'s List` : name}</h2>
       </header>
-
-      <Droppable droppableId={name}>
-        {(provided) => (
-          <div
-            ref={provided.innerRef}
-            {...provided.droppableProps}
-            className="border border-gray-300 rounded-md p-4"
-          >
-            {guestList.map((guest, index) => (
-              <GuestCard key={guest.id} guest={guest} index={index} />
-            ))}
-            {provided.placeholder}
-
-            {canAddGuest && (
-              <form onSubmit={handleSubmit}>
-                <input
-                  type="text"
-                  value={newName}
-                  onChange={(e) => setNewName(e.target.value)}
-                  placeholder="Enter a name.."
-                  className="border w-full rounded-md p-1"
-                />
-              </form>
-            )}
-
-            {!canAddGuest && !guestList.length && (
-              <span className="text-sm text-gray-400">
-                Drag guests here to build your master list!
-              </span>
-            )}
-          </div>
+      <div className="border border-gray-300 rounded-md p-4">
+        <Droppable droppableId={name}>
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {guestList.map((guest, index) => (
+                <GuestCard key={guest.id} guest={guest} index={index} />
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+        {canAddGuest && (
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => setNewName(e.target.value)}
+              placeholder="Enter a name.."
+              className="border w-full rounded-md p-1"
+            />
+          </form>
         )}
-      </Droppable>
+
+        {!canAddGuest && !guestList.length && (
+          <span className="text-sm text-gray-400">
+            Drag guests here to build your master list!
+          </span>
+        )}
+      </div>
     </div>
   );
 };
