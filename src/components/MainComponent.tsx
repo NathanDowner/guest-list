@@ -2,7 +2,7 @@ import React from 'react';
 import GuestList from '../components/GuestList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useAppDispatch } from '../store/hooks';
-import { reorderList } from '../store/guestListSlice';
+import { moveAcrossList, reorderList } from '../store/guestListSlice';
 import { FINAL_LIST_NAME } from '../utils/constants';
 
 const MainComponent = () => {
@@ -26,6 +26,16 @@ const MainComponent = () => {
           guestId: draggableId,
           srcIndex: source.index,
           destIndex: destination.index,
+        })
+      );
+    } else {
+      dispatch(
+        moveAcrossList({
+          srcIndex: source.index,
+          destIndex: destination.index,
+          srcListName: source.droppableId,
+          destListName: destination.droppableId,
+          guestId: draggableId,
         })
       );
     }

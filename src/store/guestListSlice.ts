@@ -3,8 +3,7 @@ import { RootState } from './store';
 import { Guest } from '../models/guest.interface';
 
 export interface GuestListState {
-  finalList: Guest[];
-  otherLists: Record<string, Guest[]>;
+  lists: Record<string, Guest[]>;
 }
 
 // interface AlternativeState {
@@ -24,9 +23,14 @@ interface MoveWithinListPayload {
   destIndex: number;
 }
 
+interface MoveAcrossListsPayload
+  extends Omit<MoveWithinListPayload, 'listName'> {
+  srcListName: string;
+  destListName: string;
+}
+
 const initialState: GuestListState = {
-  finalList: [],
-  otherLists: {},
+  lists: { finalList: [] },
 };
 
 export const guestListSlice = createSlice({
@@ -35,17 +39,17 @@ export const guestListSlice = createSlice({
   reducers: {
     addGuest: (state, action: PayloadAction<AddToListPayload>) => {
       const { listName, guest } = action.payload;
-      const list = state.otherLists[listName];
+      const list = state.lists[listName];
       if (list) {
         list.push(guest);
       } else {
-        state.otherLists[listName] = [guest];
+        state.lists[listName] = [guest];
       }
     },
 
     reorderList: (state, action: PayloadAction<MoveWithinListPayload>) => {
       const { listName, guestId, srcIndex, destIndex } = action.payload;
-      const list = state.otherLists[listName];
+      const list = state.lists[listName];
 
       const guest = list.find((guest) => guest.id === guestId);
       if (guest) {
@@ -53,15 +57,28 @@ export const guestListSlice = createSlice({
         list.splice(destIndex, 0, guest);
       }
     },
+
+    moveAcrossList: (state, action: PayloadAction<MoveAcrossListsPayload>) => {
+      const { srcListName, srcIndex, destListName, destIndex, guestId } =
+        action.payload;
+      const srcList = state.lists[srcListName];
+      const destList = state.lists[destListName];
+
+      const guest = srcList.find((guest) => guest.id === guestId);
+      if (guest) {
+        srcList.splice(srcIndex, 1);
+        destList.splice(destIndex, 0, guest);
+      }
+    },
   },
 });
 
-export const { addGuest, reorderList } = guestListSlice.actions;
+export const { addGuest, reorderList, moveAcrossList } = guestListSlice.actions;
 
 // Selectors
 export const selectFinalList = (state: RootState) =>
-  state.guestList.otherLists.finalList;
+  state.guestList.lists.finalList;
 export const selectList = (listName: string) => (state: RootState) =>
-  state.guestList.otherLists[listName] || [];
+  state.guestList.lists[listName] || [];
 
 export default guestListSlice.reducer;

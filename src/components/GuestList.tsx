@@ -1,16 +1,17 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import { addGuest, selectList } from '../store/guestListSlice';
 import { Guest } from '../models/guest.interface';
 import { createUUID } from '../utils';
 import { Droppable } from 'react-beautiful-dnd';
 import GuestCard from './GuestCard';
+import { FINAL_LIST_NAME } from '../utils/constants';
 
 interface GuestListProps {
-  name?: string;
+  name: string;
 }
 
-const GuestList = ({ name = '' }: GuestListProps) => {
+const GuestList = ({ name }: GuestListProps) => {
   const [newName, setNewName] = useState('');
 
   const dispatch = useAppDispatch();
@@ -24,15 +25,15 @@ const GuestList = ({ name = '' }: GuestListProps) => {
     setNewName('');
   };
 
-  const droppableId = name || 'finalList';
+  const canAddGuest = useMemo(() => name !== FINAL_LIST_NAME, [name]);
 
   return (
     <div className="text-center last:text-right first:text-left">
       <header>
-        <h2 className="">{name ? `${name}'s List` : 'Final List'}</h2>
+        <h2 className="">{canAddGuest ? `${name}'s List` : name}</h2>
       </header>
 
-      <Droppable droppableId={droppableId}>
+      <Droppable droppableId={name}>
         {(provided) => (
           <div
             ref={provided.innerRef}
@@ -44,15 +45,23 @@ const GuestList = ({ name = '' }: GuestListProps) => {
             ))}
             {provided.placeholder}
 
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={newName}
-                onChange={(e) => setNewName(e.target.value)}
-                placeholder="Enter a name.."
-                className="border w-full rounded-md p-1"
-              />
-            </form>
+            {canAddGuest && (
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="text"
+                  value={newName}
+                  onChange={(e) => setNewName(e.target.value)}
+                  placeholder="Enter a name.."
+                  className="border w-full rounded-md p-1"
+                />
+              </form>
+            )}
+
+            {!canAddGuest && !guestList.length && (
+              <span className="text-sm text-gray-400">
+                Drag guests here to build your master list!
+              </span>
+            )}
           </div>
         )}
       </Droppable>
