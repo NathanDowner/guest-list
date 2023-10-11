@@ -3,11 +3,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { Contributor } from '../models/contributor.interface';
 import { RootState } from './store';
-
-interface AddContributorPayload {
-  name: string;
-  id: string;
-}
+import { act } from 'react-dom/test-utils';
 
 interface RemoveContributorPayload {
   id: string;
@@ -18,18 +14,18 @@ interface ContributorsState {
 }
 
 const initialState: ContributorsState = {
-  contributors: [
-    { name: 'John', id: '1' },
-    { name: 'Jane', id: '2' },
-  ],
+  contributors: [],
 };
 
 export const contributorsSlice = createSlice({
   name: 'contributors',
   initialState,
   reducers: {
-    addContributor: (state, action: PayloadAction<AddContributorPayload>) => {
+    addContributor: (state, action: PayloadAction<Contributor>) => {
       state.contributors.push(action.payload);
+    },
+    bulkAddContributors: (state, action: PayloadAction<Contributor[]>) => {
+      state.contributors = action.payload;
     },
     removeContributor: (
       state,
@@ -43,7 +39,8 @@ export const contributorsSlice = createSlice({
   },
 });
 
-export const { addContributor, removeContributor } = contributorsSlice.actions;
+export const { addContributor, bulkAddContributors, removeContributor } =
+  contributorsSlice.actions;
 
 // Selectors
 export const selectContributors = (state: RootState) =>
