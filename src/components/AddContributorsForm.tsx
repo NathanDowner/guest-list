@@ -21,10 +21,7 @@ const AddContributorsForm = () => {
         name: Yup.string().required(),
       }),
       onSubmit: (values, { resetForm }) => {
-        setContributors((prevContributors) => [
-          ...prevContributors,
-          { id: createUUID(), name: values.name },
-        ]);
+        addContributor(values.name);
         resetForm();
       },
     });
@@ -33,18 +30,40 @@ const AddContributorsForm = () => {
     dispatch(bulkAddContributors(contributors));
   };
 
+  const addContributor = (name: string) => {
+    setContributors((prevContributors) => [
+      ...prevContributors,
+      { name, id: createUUID() },
+    ]);
+  };
+
+  const removeContributor = (id: string) => {
+    setContributors((prevContributors) =>
+      prevContributors.filter((contributor) => contributor.id !== id)
+    );
+  };
+
   return (
-    <div className="grid grid-cols-2 gap-4 mt-8 max-w-3xl mx-auto">
+    <div className="grid grid-cols-2 gap-4 mt-8 ">
       {/* list to be confirmed */}
 
       <div className="">
         <header>
           <h2 className="text-2xl font-semibold">Contributors</h2>
         </header>
-        <ol className=" list-decimal ml-4">
+        <ol className=" list-decimal">
           {contributors.map((contributor) => (
-            <li className="rounded-md mb-2" key={contributor.id}>
+            <li
+              className="group mb-2 flex items-center justify-between border rounded-md w-full py-1 px-2"
+              key={contributor.id}
+            >
               {contributor.name}
+              <span
+                onClick={() => removeContributor(contributor.id)}
+                className="hidden rounde-md group-hover:block text-red-500 ml-24 cursor-pointer"
+              >
+                x
+              </span>
             </li>
           ))}
         </ol>
@@ -91,6 +110,7 @@ const AddContributorsForm = () => {
                 type="text"
                 name="email"
                 id="email"
+                placeholder="Disabled for demo purposes"
                 disabled
               />
             </label>
