@@ -1,6 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Guest } from '../models/guest.interface';
+import { Contributor } from '@/models/contributor.interface';
 
 export interface GuestListState {
   lists: Record<string, Guest[]>;
@@ -37,6 +38,13 @@ export const guestListSlice = createSlice({
   name: 'guestList',
   initialState,
   reducers: {
+    createLists: (state, action: PayloadAction<Contributor[]>) => {
+      const contributors = action.payload;
+      contributors.forEach((contributor) => {
+        state.lists[contributor.name] = [];
+      });
+    },
+
     addGuest: (state, action: PayloadAction<AddToListPayload>) => {
       const { listName, guest } = action.payload;
       const list = state.lists[listName];
@@ -73,7 +81,8 @@ export const guestListSlice = createSlice({
   },
 });
 
-export const { addGuest, reorderList, moveAcrossList } = guestListSlice.actions;
+export const { addGuest, reorderList, moveAcrossList, createLists } =
+  guestListSlice.actions;
 
 // Selectors
 export const selectFinalList = (state: RootState) =>

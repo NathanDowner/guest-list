@@ -8,6 +8,7 @@ import { useState } from 'react';
 import { createUUID } from '../utils';
 import { useAppDispatch } from '../store/hooks';
 import { bulkAddContributors } from '../store/contributorSlice';
+import { createLists } from '@/store/guestListSlice';
 
 const AddContributorsForm = () => {
   const dispatch = useAppDispatch();
@@ -28,6 +29,7 @@ const AddContributorsForm = () => {
 
   const submitContributors = () => {
     dispatch(bulkAddContributors(contributors));
+    dispatch(createLists(contributors));
   };
 
   const addContributor = (name: string) => {
