@@ -5,9 +5,12 @@ import { store } from './store/store.ts';
 import { Provider } from 'react-redux';
 import { RouterProvider } from 'react-router-dom';
 import { router } from '@/routes.tsx';
+import { AuthProvider } from './contexts/AuthContext.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <Provider store={store}>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </Provider>
 );

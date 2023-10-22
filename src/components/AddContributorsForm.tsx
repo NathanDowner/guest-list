@@ -9,6 +9,7 @@ import { createUUID } from '../utils';
 import { useAppDispatch } from '../store/hooks';
 import { bulkAddContributors } from '../store/contributorSlice';
 import { createLists } from '@/store/guestListSlice';
+import { MIN_CONTRIBUTORS } from '@/utils/constants';
 
 const AddContributorsForm = () => {
   const dispatch = useAppDispatch();
@@ -69,7 +70,7 @@ const AddContributorsForm = () => {
             </li>
           ))}
         </ol>
-        {contributors.length < 2 ? (
+        {contributors.length < MIN_CONTRIBUTORS ? (
           <span className="text-sm text-gray-400">
             Add at least 2 contributors to get started building your list!
           </span>

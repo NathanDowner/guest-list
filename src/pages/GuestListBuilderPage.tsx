@@ -11,7 +11,7 @@ const NOT_A_CONTRIBUTOR: Contributor = {
   name: FINAL_LIST_NAME,
 };
 
-const MainComponent = () => {
+const GuestListBuilderPage = () => {
   const contributors = useAppSelector(selectContributors);
   const dispatch = useAppDispatch();
   const handleDragEnd = (result: DropResult) => {
@@ -58,4 +58,4 @@ const MainComponent = () => {
   );
 };
 
-export default MainComponent;
+export default GuestListBuilderPage;
