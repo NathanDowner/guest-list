@@ -1,6 +1,7 @@
 export interface Contributor {
   name: string;
-  id: string;
+  email: string;
+  photoURL?: string;
 }
 
-export type CreateContributorDto = Omit<Contributor, 'id'>;
+// export type CreateContributorDto = Omit<Contributor, 'photo'>;

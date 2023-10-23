@@ -1,48 +1,60 @@
 import * as Yup from 'yup';
 import { useFormik } from 'formik';
-import {
-  Contributor,
-  CreateContributorDto,
-} from '../models/contributor.interface';
-import { useState } from 'react';
+import { Contributor } from '../models/contributor.interface';
+import { useEffect, useState } from 'react';
 import { createUUID } from '../utils';
 import { useAppDispatch } from '../store/hooks';
 import { bulkAddContributors } from '../store/contributorSlice';
 import { createLists } from '@/store/guestListSlice';
 import { MIN_CONTRIBUTORS } from '@/utils/constants';
+import { useAuth } from '@/contexts/AuthContext';
 
 const AddContributorsForm = () => {
   const dispatch = useAppDispatch();
+  const { user } = useAuth();
   const [contributors, setContributors] = useState<Contributor[]>([]);
   const { values, errors, touched, handleSubmit, handleChange, handleBlur } =
-    useFormik<CreateContributorDto>({
+    useFormik<Contributor>({
       initialValues: {
         name: '',
+        email: '',
       },
       validationSchema: Yup.object({
         name: Yup.string().required(),
+        email: Yup.string().email().required(),
       }),
       onSubmit: (values, { resetForm }) => {
-        addContributor(values.name);
+        addContributor(values);
         resetForm();
       },
     });
+
+  useEffect(() => {
+    if (user) {
+      setContributors([
+        {
+          name: user.displayName || '',
+          email: user.email || '',
+        },
+      ]);
+    }
+  }, [user]);
 
   const submitContributors = () => {
     dispatch(bulkAddContributors(contributors));
     dispatch(createLists(contributors));
   };
 
-  const addContributor = (name: string) => {
+  const addContributor = (contributor: Contributor) => {
     setContributors((prevContributors) => [
       ...prevContributors,
-      { name, id: createUUID() },
+      { ...contributor },
     ]);
   };
 
-  const removeContributor = (id: string) => {
+  const removeContributor = (email: string) => {
     setContributors((prevContributors) =>
-      prevContributors.filter((contributor) => contributor.id !== id)
+      prevContributors.filter((contributor) => contributor.email !== email),
     );
   };
 
@@ -50,23 +62,27 @@ const AddContributorsForm = () => {
     <div className="grid grid-cols-2 gap-4 mt-8 ">
       {/* list to be confirmed */}
 
-      <div className="">
+      <div>
         <header>
           <h2 className="text-2xl font-semibold">Contributors</h2>
         </header>
         <ol className=" list-decimal">
-          {contributors.map((contributor) => (
+          {contributors.map((contributor, idx) => (
             <li
               className="group mb-2 flex items-center justify-between border rounded-md w-full py-1 px-2"
-              key={contributor.id}
+              key={contributor.email}
             >
               {contributor.name}
-              <span
-                onClick={() => removeContributor(contributor.id)}
-                className="hidden rounde-md group-hover:block text-red-500 ml-24 cursor-pointer"
-              >
-                x
-              </span>
+              {idx > 0 ? (
+                <span
+                  onClick={() => removeContributor(contributor.email)}
+                  className="hidden rounde-md group-hover:block text-red-500 ml-24 cursor-pointer"
+                >
+                  x
+                </span>
+              ) : (
+                <span className="text-gray-400">Creator</span>
+              )}
             </li>
           ))}
         </ol>
@@ -77,7 +93,7 @@ const AddContributorsForm = () => {
         ) : (
           <button
             onClick={submitContributors}
-            className="border py-2 px-4 mt-4  text-sm rounded-md bg-gray-200 hover:bg-gray-300"
+            className="border py-2 px-4 mt-4 text-sm rounded-md bg-gray-200 hover:bg-gray-300"
             type="button"
           >
             Start building the list!
@@ -92,9 +108,15 @@ const AddContributorsForm = () => {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <label htmlFor="name">
-              Full Name
+              <span
+                className={`${touched.name && errors.name && 'text-red-400'}`}
+              >
+                Full Name
+              </span>
               <input
-                className="border w-full rounded-md p-1"
+                className={`${
+                  touched.name && errors.name && 'border-red-400'
+                } border w-full rounded-md p-1`}
                 type="text"
                 name="name"
                 id="name"
@@ -107,14 +129,21 @@ const AddContributorsForm = () => {
 
           <div>
             <label htmlFor="name">
-              Email
+              <span
+                className={`${touched.email && errors.email && 'text-red-400'}`}
+              >
+                Email
+              </span>
               <input
-                className="border w-full rounded-md p-1"
-                type="text"
+                className={`${
+                  touched.email && errors.email && 'border-red-400'
+                } border w-full rounded-md p-1`}
+                type="email"
                 name="email"
                 id="email"
-                placeholder="Disabled for demo purposes"
-                disabled
+                value={values.email}
+                onChange={handleChange}
+                onBlur={handleBlur}
               />
             </label>
           </div>
