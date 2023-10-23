@@ -7,7 +7,7 @@ import { selectContributors } from '../store/contributorSlice';
 import { Contributor } from '../models/contributor.interface';
 
 const NOT_A_CONTRIBUTOR: Contributor = {
-  id: 'not-a-contributor',
+  email: 'not-a-contributor',
   name: FINAL_LIST_NAME,
 };
 
@@ -33,7 +33,7 @@ const GuestListBuilderPage = () => {
           guestId: draggableId,
           srcIndex: source.index,
           destIndex: destination.index,
-        })
+        }),
       );
     } else {
       dispatch(
@@ -43,7 +43,7 @@ const GuestListBuilderPage = () => {
           srcListName: source.droppableId,
           destListName: destination.droppableId,
           guestId: draggableId,
-        })
+        }),
       );
     }
   };

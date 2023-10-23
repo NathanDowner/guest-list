@@ -1,11 +1,22 @@
+import { useNavigate } from 'react-router-dom';
 import ListCard from './../components/ListCard';
+import { AppRoutes } from '@/routes';
 
 const ListsPage = () => {
+  const navigate = useNavigate();
+
+  const createNewList = () => {
+    navigate(AppRoutes.newList);
+  };
+
   return (
     <>
       <header className="mb-10 flex justify-between items-center">
         <h1 className="text-3xl">All Lists</h1>
-        <button className="border py-2 px-4 rounded-md bg-gray-200 hover:bg-gray-300">
+        <button
+          onClick={createNewList}
+          className="border py-2 px-4 rounded-md bg-gray-200 hover:bg-gray-300"
+        >
           Create List
         </button>
       </header>

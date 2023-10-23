@@ -149,10 +149,11 @@ const AddContributorsForm = () => {
           </div>
 
           <button
-            className="border py-2 px-4 rounded-md bg-gray-200 hover:bg-gray-300"
+            disabled={!user}
+            className="border py-2 px-4 rounded-md bg-gray-200 hover:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed"
             type="submit"
           >
-            Add Contributor
+            {user ? 'Add Contributor' : 'Login to add contributor'}
           </button>
         </form>
       </div>

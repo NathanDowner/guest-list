@@ -4,6 +4,7 @@ import ListsPage from './pages/ListsPage';
 import AuthGuard from './components/AuthGuard';
 import AddContributorsForm from './components/AddContributorsForm';
 import DefaultLayout from './layouts/DefaultLayout';
+import App from './App';
 
 export const AppRoutes = {
   root: '/',
@@ -30,7 +31,7 @@ export const router = createBrowserRouter([
     path: 'new-list',
     element: (
       <DefaultLayout>
-        <AddContributorsForm />
+        <App />
       </DefaultLayout>
     ),
   },
