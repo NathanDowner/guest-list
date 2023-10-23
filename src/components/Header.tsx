@@ -7,12 +7,13 @@ const Header = () => {
   return (
     <header className="bg-gray-300">
       <div className="flex justify-between items-center mx-auto max-w-5xl p-4">
-        <h1 className="text-4xl text-center">
+        <h3 className="text-2xl text-center">
           <Link to={AppRoutes.root}>Guest listrr</Link>
-        </h1>
+        </h3>
         <div>
           {user ? (
             <div className="flex items-center gap-4">
+              <Link to={AppRoutes.lists}>My Lists</Link>
               <div className="flex items-center gap-1 text-sm text-gray-600">
                 <img
                   className="inline-block w-8 h-8 rounded-full"
