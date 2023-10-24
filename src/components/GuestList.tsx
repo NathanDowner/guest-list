@@ -12,7 +12,7 @@ interface GuestListProps {
   contributor: Contributor;
 }
 
-const GuestList = ({ contributor: { name, id } }: GuestListProps) => {
+const GuestList = ({ contributor: { name, email } }: GuestListProps) => {
   const [newName, setNewName] = useState('');
 
   const dispatch = useAppDispatch();
@@ -26,25 +26,32 @@ const GuestList = ({ contributor: { name, id } }: GuestListProps) => {
     setNewName('');
   };
 
-  const canAddGuest = useMemo(() => name !== FINAL_LIST_NAME, [name]);
+  const isContributorList = useMemo(() => name !== FINAL_LIST_NAME, [name]);
 
   return (
-    <div className="text-center last:text-right first:text-left">
+    <div className="text-center w-[250px] flex-shrink-0">
       <header>
-        <h2 className="">{canAddGuest ? `${name}'s List` : name}</h2>
+        <h2 className="">
+          {isContributorList ? `${name}'s List` : 'Master List'}
+        </h2>
       </header>
       <div className="border border-gray-300 rounded-md p-4">
         <Droppable droppableId={name}>
           {(provided) => (
             <div ref={provided.innerRef} {...provided.droppableProps}>
               {guestList.map((guest, index) => (
-                <GuestCard key={guest.id} guest={guest} index={index} />
+                <GuestCard
+                  key={guest.id}
+                  guest={guest}
+                  index={index}
+                  showNumbers={!isContributorList}
+                />
               ))}
               {provided.placeholder}
             </div>
           )}
         </Droppable>
-        {canAddGuest && (
+        {isContributorList && (
           <form onSubmit={handleSubmit}>
             <input
               type="text"
@@ -56,7 +63,7 @@ const GuestList = ({ contributor: { name, id } }: GuestListProps) => {
           </form>
         )}
 
-        {!canAddGuest && !guestList.length && (
+        {!isContributorList && !guestList.length && (
           <span className="text-sm text-gray-400">
             Drag guests here to build your master list!
           </span>
