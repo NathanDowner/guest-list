@@ -48,11 +48,17 @@ const GuestListBuilderPage = () => {
     }
   };
   return (
-    <div className="mt-4 grid grid-cols-3 gap-4">
+    <div
+      className={`mt-4 flex gap-4 overflow-x-auto ${
+        contributors.length <= 2 && 'justify-evenly'
+      }`}
+    >
       <DragDropContext onDragEnd={handleDragEnd}>
         <GuestList contributor={contributors[0]} />
         <GuestList contributor={NOT_A_CONTRIBUTOR} />
-        <GuestList contributor={contributors[1]} />
+        {contributors.slice(1).map((contributor) => (
+          <GuestList contributor={contributor} />
+        ))}
       </DragDropContext>
     </div>
   );

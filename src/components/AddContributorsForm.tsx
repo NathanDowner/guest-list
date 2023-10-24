@@ -2,7 +2,6 @@ import * as Yup from 'yup';
 import { useFormik } from 'formik';
 import { Contributor } from '../models/contributor.interface';
 import { useEffect, useState } from 'react';
-import { createUUID } from '../utils';
 import { useAppDispatch } from '../store/hooks';
 import { bulkAddContributors } from '../store/contributorSlice';
 import { createLists } from '@/store/guestListSlice';
@@ -88,7 +87,8 @@ const AddContributorsForm = () => {
         </ol>
         {contributors.length < MIN_CONTRIBUTORS ? (
           <span className="text-sm text-gray-400">
-            Add at least 2 contributors to get started building your list!
+            Add at least {MIN_CONTRIBUTORS} contributor(s) to get started
+            building your list!
           </span>
         ) : (
           <button
