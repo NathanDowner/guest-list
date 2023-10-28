@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import ListCard from './../components/ListCard';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AppRoutes } from '@/routes';
-import { collection, query, where } from 'firebase/firestore';
+import { FieldPath, collection, query, where } from 'firebase/firestore';
 import { db } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
 import { listConverter } from '@/models/list.interface';
@@ -10,10 +10,10 @@ import { listConverter } from '@/models/list.interface';
 const ListsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const q = query(
-    collection(db, 'lists'),
-    where('contributors', 'array-contains', user?.email),
-  ).withConverter(listConverter);
+  const path: FieldPath = new FieldPath('contributors', user!.email!);
+  const q = query(collection(db, 'lists'), where(path, '!=', '')).withConverter(
+    listConverter,
+  );
 
   const [values, loading, error] = useCollectionData(q, { initialValue: [] });
 

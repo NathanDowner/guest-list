@@ -1,6 +1,9 @@
+import { Role } from './role.enum';
+
 export interface Contributor {
   name: string;
   email: string;
+  role: Role;
   photoURL?: string;
 }
 

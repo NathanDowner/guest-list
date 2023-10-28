@@ -5,14 +5,17 @@ import {
   SnapshotOptions,
   WithFieldValue,
 } from 'firebase/firestore';
+import { Contributor } from './contributor.interface';
 
 export type List = {
   id: string;
-  contributors: string[];
+  contributors: Record<string, Contributor>;
   title: string;
   author: string;
   guests: string[];
 };
+
+export type CreateListDto = Omit<List, 'id'>;
 
 export const listConverter: FirestoreDataConverter<List> = {
   toFirestore(list: WithFieldValue<List>): DocumentData {
