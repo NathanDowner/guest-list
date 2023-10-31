@@ -15,25 +15,24 @@ export const AppRoutes = {
 
 export const router = createBrowserRouter([
   {
-    path: '',
-    element: <Navigate to="/lists" />,
-  },
-  {
-    path: 'lists/',
-    element: <AuthGuard />,
+    path: '/',
+    element: <DefaultLayout />,
     children: [
-      { path: '', element: <ListsPage /> },
+      { path: '', element: <Navigate to="/lists" /> },
+      {
+        path: 'lists/',
+        element: <AuthGuard />,
+        children: [
+          { path: '', element: <ListsPage /> },
 
-      { path: ':listId', element: <GuestListBuilderPage /> },
+          { path: ':listId', element: <GuestListBuilderPage /> },
+        ],
+      },
+      {
+        path: 'new-list',
+        element: <App />,
+      },
+      { path: '*', element: <div>Not Found</div> },
     ],
   },
-  {
-    path: 'new-list',
-    element: (
-      <DefaultLayout>
-        <App />
-      </DefaultLayout>
-    ),
-  },
-  { path: '*', element: <div>Not Found</div> },
 ]);
