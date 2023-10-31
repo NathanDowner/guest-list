@@ -2,7 +2,19 @@
 import { FirebaseOptions, initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
-import { getFirestore } from 'firebase/firestore';
+import {
+  FieldPath,
+  collection,
+  doc,
+  getFirestore,
+  query,
+  where,
+} from 'firebase/firestore';
+import {
+  useCollectionData,
+  useDocumentData,
+} from 'react-firebase-hooks/firestore';
+import { listConverter } from '@/models/list.interface';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -20,6 +32,26 @@ const firebaseConfig: FirebaseOptions = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+// const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
+
+// Custom hooks
+
+export const useGetList = (listId: string) =>
+  useDocumentData(doc(db, 'lists', `${listId}`).withConverter(listConverter));
+
+export const useGetListCollection = (listId: string) =>
+  useCollectionData(
+    collection(db, 'lists', `${listId}`).withConverter(listConverter),
+    { initialValue: [] },
+  );
+
+export const useGetUserLists = (email: string) => {
+  const path: FieldPath = new FieldPath('contributors', email);
+  const q = query(collection(db, 'lists'), where(path, '!=', '')).withConverter(
+    listConverter,
+  );
+
+  return useCollectionData(q, { initialValue: [] });
+};

@@ -1,21 +1,13 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import ListCard from './../components/ListCard';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
 import { AppRoutes } from '@/routes';
-import { FieldPath, collection, query, where } from 'firebase/firestore';
-import { db } from '@/lib/firebase';
+import { useGetUserLists } from '@/lib/firebase';
 import { useAuth } from '@/contexts/AuthContext';
-import { listConverter } from '@/models/list.interface';
 
 const ListsPage = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const path: FieldPath = new FieldPath('contributors', user!.email!);
-  const q = query(collection(db, 'lists'), where(path, '!=', '')).withConverter(
-    listConverter,
-  );
-
-  const [values, loading, error] = useCollectionData(q, { initialValue: [] });
+  const [values, loading, error] = useGetUserLists(user!.email!);
 
   const createNewList = () => {
     navigate(AppRoutes.newList);
@@ -43,7 +35,9 @@ const ListsPage = () => {
         ) : (
           <div className="flex gap-4">
             {values!.map((list) => (
-              <ListCard list={list} key={list.id} />
+              <Link key={list.id} to={AppRoutes.guestListBuilder(list.id)}>
+                <ListCard list={list} />
+              </Link>
             ))}
           </div>
         )}
