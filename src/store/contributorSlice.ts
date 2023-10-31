@@ -22,10 +22,14 @@ export const contributorsSlice = createSlice({
     bulkAddContributors: (state, action: PayloadAction<Contributor[]>) => {
       state.contributors = action.payload;
     },
+
+    clearContributors: (state) => {
+      state.contributors = [];
+    },
   },
 });
 
-export const { addContributor, bulkAddContributors } =
+export const { addContributor, bulkAddContributors, clearContributors } =
   contributorsSlice.actions;
 
 // Selectors

@@ -81,6 +81,10 @@ export const guestListSlice = createSlice({
         destList.splice(destIndex, 0, guest);
       }
     },
+
+    clearLists: (state) => {
+      state.lists = { finalList: [] };
+    },
   },
 });
 
@@ -90,6 +94,7 @@ export const {
   moveAcrossList,
   createLists,
   populateMasterList,
+  clearLists,
 } = guestListSlice.actions;
 
 // Selectors

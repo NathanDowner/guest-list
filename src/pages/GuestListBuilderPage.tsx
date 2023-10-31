@@ -2,6 +2,7 @@ import GuestList from '../components/GuestList';
 import { DragDropContext, DropResult } from 'react-beautiful-dnd';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 import {
+  clearLists,
   createLists,
   moveAcrossList,
   populateMasterList,
@@ -9,6 +10,7 @@ import {
 } from '../store/guestListSlice';
 import {
   bulkAddContributors,
+  clearContributors,
   selectContributors,
 } from '../store/contributorSlice';
 import { Contributor } from '../models/contributor.interface';
@@ -24,6 +26,8 @@ const GuestListBuilderPage = () => {
     useGetListContributors(listId!);
   const contributors = useAppSelector(selectContributors);
   const dispatch = useAppDispatch();
+
+  useClearStoreOnDestroy();
 
   useEffect(() => {
     if (list && listContributors) {
@@ -71,6 +75,15 @@ const GuestListBuilderPage = () => {
       );
     }
   };
+
+  if (
+    !loadingList &&
+    !loadingListContributors &&
+    (!list || !listContributors)
+  ) {
+    return <div>Not Found</div>;
+  }
+
   return (
     <div
       className={`mt-4 flex gap-4 overflow-x-auto ${
@@ -93,3 +106,14 @@ const GuestListBuilderPage = () => {
 };
 
 export default GuestListBuilderPage;
+
+const useClearStoreOnDestroy = () => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    return () => {
+      dispatch(clearContributors());
+      dispatch(clearLists());
+    };
+  }, []);
+};
