@@ -4,7 +4,7 @@ import { Contributor } from '../models/contributor.interface';
 import { useEffect, useState } from 'react';
 import { MIN_CONTRIBUTORS } from '@/utils/constants';
 import { useAuth } from '@/contexts/AuthContext';
-import { CreateListDto, listConverter } from '@/models/list.interface';
+import { CreateListDto } from '@/models/list.interface';
 import { db } from '@/lib/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { Role } from '@/models/role.enum';
@@ -73,9 +73,6 @@ const AddContributorsForm = () => {
 
     await saveList(newList);
   };
-  //   dispatch(bulkAddContributors(contributors));
-  //   dispatch(createLists(contributors));
-  // };
 
   const addContributor = (contributor: Contributor) => {
     setContributors((prevContributors) => [
@@ -88,6 +85,16 @@ const AddContributorsForm = () => {
     try {
       setIsCreatingList(true);
       const docRef = await addDoc(collection(db, 'lists'), newList);
+
+      Promise.all(
+        Object.values(newList.contributors).map((contributor) => {
+          return addDoc(collection(db, `lists/${docRef.id}/contributors`), {
+            name: contributor.name,
+            email: contributor.email,
+            guests: [],
+          });
+        }),
+      );
       setIsCreatingList(false);
       navigate(AppRoutes.guestListBuilder(docRef.id));
     } catch (error) {
