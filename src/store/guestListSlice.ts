@@ -1,16 +1,11 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Guest } from '../models/guest.interface';
-import { Contributor } from '@/models/contributor.interface';
+import { Contributor, ListContributor } from '@/models/contributor.interface';
 
 export interface GuestListState {
   lists: Record<string, Guest[]>;
 }
-
-// interface AlternativeState {
-//   contributors: string[];
-//   guestLists: Record<string, Guest[]>;
-// }
 
 interface AddToListPayload {
   listName: string;
@@ -38,10 +33,13 @@ export const guestListSlice = createSlice({
   name: 'guestList',
   initialState,
   reducers: {
-    createLists: (state, action: PayloadAction<Contributor[]>) => {
+    createLists: (state, action: PayloadAction<ListContributor[]>) => {
       const contributors = action.payload;
       contributors.forEach((contributor) => {
-        state.lists[contributor.name] = [];
+        state.lists[contributor.name] = contributor.guests.map((guest) => ({
+          name: guest,
+          id: guest,
+        }));
       });
     },
 
