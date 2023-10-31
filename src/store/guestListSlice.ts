@@ -45,6 +45,11 @@ export const guestListSlice = createSlice({
       });
     },
 
+    populateMasterList: (state, action: PayloadAction<string[]>) => {
+      const masterList = action.payload; // TODO: remove id
+      state.lists.finalList = masterList.map((name) => ({ name, id: name }));
+    },
+
     addGuest: (state, action: PayloadAction<AddToListPayload>) => {
       const { listName, guest } = action.payload;
       const list = state.lists[listName];
@@ -81,8 +86,13 @@ export const guestListSlice = createSlice({
   },
 });
 
-export const { addGuest, reorderList, moveAcrossList, createLists } =
-  guestListSlice.actions;
+export const {
+  addGuest,
+  reorderList,
+  moveAcrossList,
+  createLists,
+  populateMasterList,
+} = guestListSlice.actions;
 
 // Selectors
 export const selectFinalList = (state: RootState) =>
