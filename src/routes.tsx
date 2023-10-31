@@ -2,9 +2,8 @@ import { Navigate, createBrowserRouter } from 'react-router-dom';
 import GuestListBuilderPage from './pages/GuestListBuilderPage';
 import ListsPage from './pages/ListsPage';
 import AuthGuard from './components/AuthGuard';
-import AddContributorsForm from './components/AddContributorsForm';
 import DefaultLayout from './layouts/DefaultLayout';
-import App from './App';
+import AddContributorsForm from './components/AddContributorsForm';
 
 export const AppRoutes = {
   root: '/',
@@ -30,7 +29,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'new-list',
-        element: <App />,
+        element: <AddContributorsForm />,
       },
       { path: '*', element: <div>Not Found</div> },
     ],
