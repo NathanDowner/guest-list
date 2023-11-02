@@ -91,15 +91,23 @@ const GuestListBuilderPage = () => {
       }`}
     >
       {loadingList || loadingListContributors ? (
-        <span className="loading loading-spinner loading-lg"></span>
-      ) : (
+        <span className="loading loading-spinner loading-lg" />
+      ) : listContributors ? (
         <DragDropContext onDragEnd={handleDragEnd}>
-          {contributors.length && <GuestList contributor={contributors[0]} />}
+          {listContributors.length && (
+            <GuestList listId={listId!} contributor={listContributors[0]} />
+          )}
           <MasterList />
-          {contributors.slice(1).map((contributor) => (
-            <GuestList key={contributor.email} contributor={contributor} />
+          {listContributors.slice(1).map((contributor) => (
+            <GuestList
+              listId={listId!}
+              key={contributor.email}
+              contributor={contributor}
+            />
           ))}
         </DragDropContext>
+      ) : (
+        <span>There was an error</span>
       )}
     </div>
   );
