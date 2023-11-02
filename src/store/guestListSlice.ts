@@ -1,7 +1,7 @@
 import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { RootState } from './store';
 import { Guest } from '../models/guest.interface';
-import { Contributor, ListContributor } from '@/models/contributor.interface';
+import { ListContributor } from '@/models/contributor.interface';
 
 export interface GuestListState {
   lists: Record<string, Guest[]>;
@@ -36,16 +36,13 @@ export const guestListSlice = createSlice({
     createLists: (state, action: PayloadAction<ListContributor[]>) => {
       const contributors = action.payload;
       contributors.forEach((contributor) => {
-        state.lists[contributor.name] = contributor.guests.map((guest) => ({
-          name: guest,
-          id: guest,
-        }));
+        state.lists[contributor.name] = contributor.guests;
       });
     },
 
-    populateMasterList: (state, action: PayloadAction<string[]>) => {
+    populateMasterList: (state, action: PayloadAction<Guest[]>) => {
       const masterList = action.payload; // TODO: remove id
-      state.lists.finalList = masterList.map((name) => ({ name, id: name }));
+      state.lists.finalList = masterList;
     },
 
     addGuest: (state, action: PayloadAction<AddToListPayload>) => {

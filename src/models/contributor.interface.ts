@@ -6,6 +6,7 @@ import {
   SnapshotOptions,
 } from 'firebase/firestore';
 import { Role } from './role.enum';
+import { Guest } from './guest.interface';
 
 export interface Contributor {
   name: string;
@@ -17,7 +18,7 @@ export interface Contributor {
 export type ListContributor = {
   name: string;
   email: string;
-  guests: string[];
+  guests: Guest[];
   id: string;
 };
 

@@ -6,13 +6,14 @@ import {
   WithFieldValue,
 } from 'firebase/firestore';
 import { Contributor } from './contributor.interface';
+import { Guest } from './guest.interface';
 
 export type List = {
   id: string;
   contributors: Record<string, Contributor>;
   title: string;
   author: string;
-  guests: string[];
+  guests: Guest[];
 };
 
 export type CreateListDto = Omit<List, 'id'>;
