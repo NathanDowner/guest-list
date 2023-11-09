@@ -10,6 +10,10 @@ export const createListName = (names: Contributor[]) => {
     .filter((contributor) => contributor.role === Role.OWNER)
     .map((contributor) => contributor.name.split(' ')[0]);
 
+  if (ownerFirstNames.length === 0) {
+    return '';
+  }
+
   if (ownerFirstNames.length === 1) {
     return `${ownerFirstNames[0]}'s List`;
   }
