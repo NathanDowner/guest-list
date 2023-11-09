@@ -3,10 +3,32 @@ import { useAppSelector } from '@/store/hooks';
 import { FINAL_LIST_NAME } from '@/utils/constants';
 import { Droppable } from 'react-beautiful-dnd';
 import GuestCard from './GuestCard';
+import { doc, setDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebase';
 
-const MasterList = () => {
+interface MasterListProps {
+  listId: string;
+  onSave: () => void;
+}
+
+const MasterList = ({ listId, onSave }: MasterListProps) => {
   const selectMasterList = selectList(FINAL_LIST_NAME);
   const masterList = useAppSelector(selectMasterList);
+
+  const saveList = async () => {
+    try {
+      await setDoc(
+        doc(db, `lists/${listId}`),
+        {
+          guests: masterList,
+        },
+        { merge: true },
+      );
+      onSave();
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <div className="text-center w-[250px] flex-shrink-0">
@@ -34,6 +56,9 @@ const MasterList = () => {
             Drag guests here to build your master list!
           </span>
         )}
+        <button onClick={saveList} className="btn btn-sm btn-secondary">
+          Save
+        </button>
       </div>
     </div>
   );

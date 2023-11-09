@@ -41,7 +41,7 @@ const GuestList = ({ contributor, listId }: GuestListProps) => {
   const saveList = async () => {
     try {
       await setDoc(
-        doc(db, 'lists', listId, 'contributors', contributor.id),
+        doc(db, `lists/${listId}/contributors/${contributor.id}`),
         {
           guests: guestList,
         },

@@ -41,7 +41,7 @@ export const guestListSlice = createSlice({
     },
 
     populateMasterList: (state, action: PayloadAction<Guest[]>) => {
-      const masterList = action.payload; // TODO: remove id
+      const masterList = action.payload;
       state.lists.finalList = masterList;
     },
 

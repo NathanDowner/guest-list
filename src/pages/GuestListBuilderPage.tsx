@@ -76,6 +76,10 @@ const GuestListBuilderPage = () => {
     }
   };
 
+  const handleSaveMasterList = () => {
+    alert('List saved');
+  };
+
   if (
     !loadingList &&
     !loadingListContributors &&
@@ -97,7 +101,7 @@ const GuestListBuilderPage = () => {
           {listContributors.length && (
             <GuestList listId={listId!} contributor={listContributors[0]} />
           )}
-          <MasterList />
+          <MasterList listId={listId!} onSave={handleSaveMasterList} />
           {listContributors.slice(1).map((contributor) => (
             <GuestList
               listId={listId!}
